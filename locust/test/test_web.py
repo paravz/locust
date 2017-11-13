@@ -15,10 +15,6 @@ from six.moves import StringIO
 
 from .testcases import LocustTestCase
 
-ALTERNATIVE_HOST = 'http://localhost'
-SWARM_DATA_WITH_HOST = {'locust_count': 5, 'hatch_rate': 5, 'host': ALTERNATIVE_HOST}
-SWARM_DATA_WITH_NO_HOST = {'locust_count': 5, 'hatch_rate': 5}
-
 
 class TestWebUI(LocustTestCase):
     def setUp(self):
@@ -142,11 +138,14 @@ class TestWebUI(LocustTestCase):
         self.assertEqual(2, int(rows[1][0]), "Exception count should be 2")
 
     def test_swarm_host_value_specified(self):
+        ALTERNATIVE_HOST = 'http://localhost'
+        SWARM_DATA_WITH_HOST = {'locust_count': 5, 'hatch_rate': 5, 'host': ALTERNATIVE_HOST}
         response = requests.post("http://127.0.0.1:%i/swarm" % self.web_port, data=SWARM_DATA_WITH_HOST)
         self.assertEqual(200, response.status_code)
         self.assertEqual(runners.locust_runner.host, SWARM_DATA_WITH_HOST['host'])
 
     def test_swarm_host_value_not_specified(self):
+        SWARM_DATA_WITH_NO_HOST = {'locust_count': 5, 'hatch_rate': 5}
         response = requests.post("http://127.0.0.1:%i/swarm" % self.web_port, data=SWARM_DATA_WITH_NO_HOST)
         self.assertEqual(200, response.status_code)
         self.assertEqual(runners.locust_runner.host, None)
