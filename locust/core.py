@@ -329,9 +329,10 @@ class TaskSet(object):
         return random.choice(self.tasks)
     
     def wait(self):
-        millis = random.randint(self.min_wait, self.max_wait)
-        seconds = millis / 1000.0
-        self._sleep(seconds)
+        if self.max_wait > 0:
+            millis = random.randint(self.min_wait, self.max_wait)
+            seconds = millis / 1000.0
+            self._sleep(seconds)
 
     def _sleep(self, seconds):
         gevent.sleep(seconds)
